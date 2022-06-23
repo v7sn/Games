@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Classic Mode</title>
+
+	<style>
+* {
+	padding: 0;
+	margin: 0;
+	font-family: 'Anek Latin', sans-serif;
+}
+
+body {
+	background: #166153;
+}
+
+/*? Start Menu */
+#game-menu {
+	width: 500px;
+	height: auto;
+
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	font-size: 40px;
+	color: white;
+	border: 2px solid #42e4c6;
+	border-radius: 20px;
+	padding: 15px;
+	padding-bottom: 20px;
+	text-align: center;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#play {
+	color: white;
+	border: 2px solid #42e4c6;
+	border-radius: 20px;
+	margin-top: 50px;
+	padding: 5px;
+	width: 90%;
+	font-size: 20px;
+	text-decoration: none;
+	background-color: #166153;
+}
+
+#play:hover {
+	background: #42e4c6;
+	transition: .1s ease-in;
+}
+
+#back {
+	color: white;
+	border: 2px solid #42e4c6;
+	border-radius: 20px;
+	margin-top: 5px;
+	padding: 5px;
+	width: 90%;
+	font-size: 20px;
+	text-decoration: none;
+	background-color: #166153;
+}
+
+#back:hover {
+	background: #42e4c6;
+	transition: .1s ease-in;
+}
+
+
+
+#player {
+	background: skyblue;
+	width: 50px;
+	height: 50px;
+	position: relative;
+	opacity: 0;
+}
+
+#health {
+	background-color: red;
+	width: 100%;
+	height: 10px;
+	position: absolute;
+	opacity: 0;
+}
+
+#healthRemaining {
+	background-color: rgb(97, 45, 45);
+	width: 100%;
+	height: 10px;
+	position: absolute;
+	opacity: 0;
+}
+
+
+#win { 
+	color: white;
+	font-size: 50px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	opacity: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+#rematch {
+	text-align: center;
+	color: white;
+	background: #166153;
+	border: 2px solid #42e4c6;
+	border-radius: 20px;
+	font-size: 20px;
+	text-decoration: none;
+	opacity: 0;
+}
+
+#rematch:hover {
+	background-color: #42e4c6;
+	transition: .5s;
+}
+	</style>
+</head>
+<body>
+
+	<div id="game-menu">
+		<p id="game-name">Medium Mode</p>
+
+		<a href="#" id="play">Play</a>
+		<a href="../index.html" id="back">Back</a>
+	</div>
+
+	<div id="healthRemaining"></div>
+	<div id="health"></div>
+	<div id="player"></div>
+	
+	<script>
+		const play = document.getElementById("play");
+		const gameMenu = document.getElementById("game-menu");
+		const healthRemaining = document.getElementById("healthRemaining");
+		const health = document.getElementById("health");
+		const player = document.getElementById("player");
+
+		window.addEventListener("load", function() {
+			player.style.opacity = 0;
+			health.style.opacity = 0;
+			healthRemaining.style.opacity = 0;
+		});
+
+		play.onclick = function() {
+			this.parentElement.remove();
+
+			var randomTop = Math.floor(Math.random() * 650);
+			var randomLeft = Math.floor(Math.random() * 1400);
+
+			player.style.opacity = 1;
+			player.style.top = randomTop + "px";
+			player.style.left = randomLeft + "px";
+			health.style.opacity = 1;
+			health.style.width = 100 + "%";
+			healthRemaining.style.opacity = 1;
+			
+			setInterval( () => {
+				var randomTop = Math.floor(Math.random() * 650);
+				var randomLeft = Math.floor(Math.random() * 1400);
+
+				player.style.top = randomTop + "px";
+				player.style.left = randomLeft + "px";
+			}, 1000)
+		}
+
+		player.onclick = function() {
+			var randomTop = Math.floor(Math.random() * 650);
+			var randomLeft = Math.floor(Math.random() * 1400);
+
+			player.style.backgroundColor = "red";
+			setTimeout(() => {
+				player.style.backgroundColor = "skyblue";
+
+				health.style.width = parseInt(health.style.width) - 20 + "%";
+			}, 100);
+
+
+			if (health.style.width === `0%`) {
+				document.body.style.background = "#166153";
+				health.remove();
+				healthRemaining.remove();
+				player.remove();
+
+				var divWin = document.createElement("div");
+				divWin.setAttribute("id", "win");
+				document.body.appendChild(divWin);
+
+				var newDivWin = document.createElement("div");
+				newDivWin.innerText = "You Win!"
+				divWin.appendChild(newDivWin);
+
+				var newButtonWin = document.createElement("a");
+				newButtonWin.innerText = "Rematch";
+				newButtonWin.setAttribute("id", "rematch");
+				newButtonWin.href = "#";
+				divWin.appendChild(newButtonWin);
+
+				const win = document.getElementById("win");
+				const rematch = document.getElementById("rematch");
+				
+				win.style.opacity = 1;
+				rematch.style.opacity = 1;
+				
+				rematch.onclick = function() {
+					window.location.reload();
+				}
+				
+			}
+		}
+	</script>
+</body>
+</html>

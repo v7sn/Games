@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Counter Mode</title>
+
+	<style>
+* {
+	padding: 0;
+	margin: 0;
+	font-family: 'Anek Latin', sans-serif;
+}
+
+body {
+	background: #166153;
+}
+
+/*? Start Menu */
+#game-menu {
+	width: 500px;
+	height: auto;
+
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	font-size: 40px;
+	color: white;
+	border: 2px solid #42e4c6;
+	border-radius: 20px;
+	padding: 15px;
+	padding-bottom: 20px;
+	text-align: center;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#choose-time {
+	background-color: #166153;
+	border: 2px solid #42e4c6;
+	border-radius: 20px;
+	font-size: 25px;
+	margin-top: 50px;
+	width: 90%;
+	text-align: center;
+	padding: 5px;
+	color: #42e4c6;
+}
+
+#choose-time:focus {
+	outline: none;
+}
+
+::placeholder {
+	color: #228a77;
+}
+
+#play {
+	color: white;
+	border: 2px solid #42e4c6;
+	border-radius: 20px;
+	margin-top: 5px;
+	padding: 5px;
+	width: 90%;
+	font-size: 20px;
+	text-decoration: none;
+	background-color: #166153;
+}
+
+#play:hover {
+	background: #42e4c6;
+	transition: .1s ease-in;
+}
+
+#back {
+	color: white;
+	border: 2px solid #42e4c6;
+	border-radius: 20px;
+	margin-top: 5px;
+	padding: 5px;
+	width: 90%;
+	font-size: 20px;
+	text-decoration: none;
+	background-color: #166153;
+}
+
+#back:hover {
+	background: #42e4c6;
+	transition: .1s ease-in;
+}
+
+
+
+#player {
+	background: skyblue;
+	width: 50px;
+	height: 50px;
+	position: relative;
+	opacity: 0;
+}
+
+
+#win { 
+	color: white;
+	font-size: 50px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	opacity: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+#rematch {
+	text-align: center;
+	color: white;
+	background: #166153;
+	border: 2px solid #42e4c6;
+	border-radius: 20px;
+	font-size: 20px;
+	text-decoration: none;
+	opacity: 0;
+}
+
+#rematch:hover {
+	background-color: #42e4c6;
+	transition: .5s;
+}
+
+#timer {
+	color: white;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 200px;
+	opacity: .1;
+}
+
+#timer::selection {
+	user-select: none;
+}
+
+	</style>
+</head>
+<body>
+
+	<div id="game-menu">
+		<p id="game-name">Counter Mode</p>
+
+		<p type="text" id="choose-time" contenteditable="true">Type your time!</p>
+		<a href="#" id="play">Play</a>
+		<a href="../index.html" id="back">Back</a>
+	</div>
+
+	<div id="counter"></div>
+	<div id="player"></div>
+	
+	<script>
+		const play = document.getElementById("play");
+		const gameMenu = document.getElementById("game-menu");
+		const counter = document.getElementById("counter");
+		const player = document.getElementById("player");
+		const chooseTime = document.getElementById("choose-time");
+		var count = 0;
+
+		window.addEventListener("load", function() {
+			player.style.opacity = 0;
+		});
+
+		chooseTime.onclick = function() {
+			this.innerText = "";
+		}
+
+		play.onclick = function() {
+			this.parentElement.remove();
+
+			var timer = document.createElement("div");
+			timer.setAttribute("id", "timer");
+			timer.innerText = chooseTime.innerText;
+			document.body.appendChild(timer);
+			timer.style.opacity = .1;
+
+			var randomTop = Math.floor(Math.random() * 650);
+			var randomLeft = Math.floor(Math.random() * 1400);
+
+			player.style.opacity = 1;
+			player.style.top = randomTop + "px";
+			player.style.left = randomLeft + "px";
+			
+			setInterval( () => {
+				var randomTop = Math.floor(Math.random() * 650);
+				var randomLeft = Math.floor(Math.random() * 1400);
+
+				player.style.top = randomTop + "px";
+				player.style.left = randomLeft + "px";
+			}, 1500)
+
+			setInterval( () => {
+				timer.innerText = parseInt(timer.innerText) - 1;
+
+				if(timer.innerText == 0) {
+				timer.remove();
+				
+				document.body.style.background = "#166153";
+				player.remove();
+
+				var divWin = document.createElement("div");
+				divWin.setAttribute("id", "win");
+				document.body.appendChild(divWin);
+
+				var newDivWin = document.createElement("div");
+				newDivWin.innerText = `Your count is ${count}`;
+				divWin.appendChild(newDivWin);
+
+				var newButtonWin = document.createElement("a");
+				newButtonWin.innerText = "Rematch";
+				newButtonWin.setAttribute("id", "rematch");
+				newButtonWin.href = "#";
+				divWin.appendChild(newButtonWin);
+
+				const win = document.getElementById("win");
+				const rematch = document.getElementById("rematch");
+				
+				win.style.opacity = 1;
+				rematch.style.opacity = 1;
+				
+				rematch.onclick = function() {
+					window.location.reload();
+				}
+				
+			}
+
+			}, 1000)
+		}
+
+		player.onclick = function() {
+			count++;
+			console.log(count);
+			var randomTop = Math.floor(Math.random() * 650);
+			var randomLeft = Math.floor(Math.random() * 1400);
+
+
+			player.style.backgroundColor = "red";
+			setTimeout(() => {
+				player.style.backgroundColor = "skyblue";
+
+				// health.style.width = parseInt(health.style.width) - 20 + "%";
+			}, 100);
+
+
+			/*
+			if (health.style.width === `0%`) {
+				document.body.style.background = "#166153";
+				health.remove();
+				healthRemaining.remove();
+				player.remove();
+
+				var divWin = document.createElement("div");
+				divWin.setAttribute("id", "win");
+				document.body.appendChild(divWin);
+
+				var newDivWin = document.createElement("div");
+				newDivWin.innerText = "You Win!"
+				divWin.appendChild(newDivWin);
+
+				var newButtonWin = document.createElement("a");
+				newButtonWin.innerText = "Rematch";
+				newButtonWin.setAttribute("id", "rematch");
+				newButtonWin.href = "#";
+				divWin.appendChild(newButtonWin);
+
+				const win = document.getElementById("win");
+				const rematch = document.getElementById("rematch");
+				
+				win.style.opacity = 1;
+				rematch.style.opacity = 1;
+				
+				rematch.onclick = function() {
+					window.location.reload();
+				}
+				
+			}
+			*/
+		}
+	</script>
+</body>
+</html>
